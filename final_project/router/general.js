@@ -3,6 +3,30 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+const axios = require('axios');
+
+async function getBooks() {
+    try {
+        const response = await axios.get('https://roward18-5001.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai'); // Replace with your actual API endpoint
+        const books = response.data;
+        console.log(books);
+        return books;
+    } catch (error) {
+        console.error('Error fetching books:', error);
+    }
+}
+
+async function getBookByISBN(isbn) {
+    try {
+        const response = await axios.get(`https://roward18-5001.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/books/${isbn}`);
+        const bookDetails = response.data;
+        // console.log(bookDetails); // Comment out or remove this line
+        return bookDetails;
+    } catch (error) {
+        console.error('Error fetching book details:', error);
+    }
+}
+
 
 public_users.post("/register", (req, res) => {
     const username = req.body.username;
@@ -86,4 +110,6 @@ public_users.get('/review/:isbn',function (req, res) {
     }
 });
 
+getBooks();
+getBookByISBN('1'); 
 module.exports.general = public_users;
